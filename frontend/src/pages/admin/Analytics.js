@@ -26,7 +26,7 @@ const Analytics = () => {
     return <div className="loading">Loading...</div>;
   }
 
-  const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#ff6b6b'];
+  const COLORS = ['#1E3A8A', '#475569', '#3B82F6', '#10B981', '#00f2fe', '#ff6b6b'];
 
   const subjectData = analytics?.subjectStats?.map(sub => ({
     name: sub.name.length > 15 ? sub.name.substring(0, 15) + '...' : sub.name,
@@ -71,8 +71,8 @@ const Analytics = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="average" fill="#667eea" name="Average %" />
-            <Bar dataKey="passRate" fill="#764ba2" name="Pass Rate %" />
+            <Bar dataKey="average" fill="#1E3A8A" name="Average %" />
+            <Bar dataKey="passRate" fill="#475569" name="Pass Rate %" />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>

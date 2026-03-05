@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { studentService } from '../../services/studentService';
 import ChartCard from '../../components/ChartCard';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Performance = () => {
   const [performance, setPerformance] = useState(null);
@@ -55,7 +55,7 @@ const Performance = () => {
             <YAxis domain={[0, 100]} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="average" fill="#667eea" name="Average %" />
+            <Bar dataKey="average" fill="#1E3A8A" name="Average %" />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>

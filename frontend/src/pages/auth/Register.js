@@ -62,98 +62,112 @@ const Register = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
-        <h2>Register</h2>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Student ID</label>
-            <input
-              type="text"
-              name="studentId"
-              value={formData.studentId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Department</label>
-            <input
-              type="text"
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Year</label>
-            <input
-              type="number"
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-              min="1"
-              max="4"
-            />
-          </div>
-          <div className="form-group">
-            <label>Role</label>
-            <input
-              type="text"
-              value="Student"
-              disabled
-              style={{ background: '#f5f5f5', cursor: 'not-allowed' }}
-            />
-            <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
-              All registrations are for student accounts. Admin accounts are pre-configured.
-            </small>
-          </div>
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+      <div className="auth-sidebar">
+        <h1>Academic Recommendation Engine</h1>
+        <p>Join us to unlock personalized academic insights and elevate your learning journey.</p>
+      </div>
+
+      <div className="auth-content">
+        <div className="auth-card">
+          <h2>Create Account</h2>
+          {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Full Name"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email Address"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Create a strong password"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Confirm Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Re-enter password"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Student ID</label>
+              <input
+                type="text"
+                name="studentId"
+                value={formData.studentId}
+                onChange={handleChange}
+                placeholder="Optional"
+              />
+            </div>
+            <div className="form-group">
+              <label>Department</label>
+              <input
+                type="text"
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                placeholder="Optional"
+              />
+            </div>
+            <div className="form-group">
+              <label>Year</label>
+              <input
+                type="number"
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                min="1"
+                max="4"
+                placeholder="e.g. 1"
+              />
+            </div>
+            <div className="form-group">
+              <label>Role</label>
+              <input
+                type="text"
+                value="Student"
+                disabled
+                style={{ background: 'var(--surface-hover)', cursor: 'not-allowed' }}
+              />
+              <small style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginTop: '0.5rem' }}>
+                All registrations are for student accounts. Admin accounts are pre-configured.
+              </small>
+            </div>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Creating...' : 'Sign Up'}
+            </button>
+          </form>
+          <p className="auth-link">
+            Already have an account? <Link to="/login">Sign in here</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

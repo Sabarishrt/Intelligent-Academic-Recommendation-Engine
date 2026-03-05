@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { studentService } from '../../services/studentService';
 import ChartCard from '../../components/ChartCard';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const StudentDashboard = () => {
   const [performance, setPerformance] = useState(null);
@@ -31,12 +31,11 @@ const StudentDashboard = () => {
     average: Math.round(sub.average),
   })) || [];
 
-  const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe'];
 
   return (
     <div className="dashboard-container">
       <h1>Student Dashboard</h1>
-      
+
       <div className="stats-grid">
         <div className="stat-card">
           <h3>Overall Average</h3>
@@ -64,7 +63,7 @@ const StudentDashboard = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="average" fill="#667eea" />
+            <Bar dataKey="average" fill="#1E3A8A" />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>

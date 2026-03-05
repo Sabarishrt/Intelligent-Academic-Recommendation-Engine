@@ -43,7 +43,7 @@ const AdminDashboard = () => {
       <h1>Admin Dashboard</h1>
 
       <div className="dashboard-header">
-        <button className="btn-primary" onClick={handleRefresh} disabled={loading}>
+        <button className="btn-primary btn-sm" onClick={handleRefresh} disabled={loading}>
           Refresh
         </button>
         {lastUpdated && <div className="last-updated">Last updated: {lastUpdated.toLocaleTimeString()}</div>}

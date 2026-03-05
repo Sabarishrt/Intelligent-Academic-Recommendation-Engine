@@ -61,18 +61,7 @@ const Recommendations = () => {
     }
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'high':
-        return '#ff4444';
-      case 'medium':
-        return '#ffaa00';
-      case 'low':
-        return '#00aa00';
-      default:
-        return '#666';
-    }
-  };
+
 
   // derive simple stats for stat cards
   const strongSubjects = marks.filter(m => ((m.marks / m.maxMarks) * 100) >= 75).length;
