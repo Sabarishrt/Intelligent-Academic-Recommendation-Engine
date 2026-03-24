@@ -1,0 +1,7 @@
+{
+  "env": {
+    "REACT_APP_API_URL": "https://intelligent-academic-recommendation.onrender.com/api",
+    "REACT_APP_AUTH_URL": "https://intelligent-academic-recommendation.onrender.com/api/auth",
+    "REACT_APP_HEALTH_URL": "https://intelligent-academic-recommendation.onrender.com/api/health"
+  }
+}
