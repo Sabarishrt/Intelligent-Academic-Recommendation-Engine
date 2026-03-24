@@ -30,6 +30,9 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Server is running' });
 });
 
+app.get('/', (req, res) => {
+  res.send('🚀 Intelligent Academic Recommendation API is running');
+});
 // Error handler
 app.use(errorHandler);
 
