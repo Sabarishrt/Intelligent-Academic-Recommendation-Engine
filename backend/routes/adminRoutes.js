@@ -9,6 +9,7 @@ const {
   updateSubject,
   deleteSubject,
   getAnalytics,
+  getStudentsByYearAndDepartment,
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -18,6 +19,7 @@ router.use(authorize('admin'));
 
 router.get('/dashboard', getDashboard);
 router.get('/students', getAllStudents);
+router.get('/students-filter', getStudentsByYearAndDepartment);
 router.get('/students/:id', getStudent);
 router.post('/subjects', createSubject);
 router.get('/subjects', getAllSubjects);

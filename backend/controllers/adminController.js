@@ -100,6 +100,30 @@ exports.getAllStudents = async (req, res, next) => {
   }
 };
 
+// @desc    Get students filtered by year and department
+// @route   GET /api/admin/students-filter
+// @access  Private (Admin)
+exports.getStudentsByYearAndDepartment = async (req, res, next) => {
+  try {
+    const { year, department } = req.query;
+    const filter = { role: 'student' };
+
+    if (year) filter.year = year;
+    if (department) filter.department = department;
+
+    const students = await User.find(filter).select('name email studentId department year');
+    const count = students.length;
+
+    res.status(200).json({
+      success: true,
+      count,
+      data: students,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get single student details
 // @route   GET /api/admin/students/:id
 // @access  Private (Admin)
@@ -286,4 +310,24 @@ exports.getAnalytics = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  exports.getStudentsByYearAndDepartment = async (req, res, next) => {
+  try {
+    const { year, department } = req.query;
+    const filter = { role: 'student' };
+
+    if (year) filter.year = year;
+    if (department) filter.department = department;
+
+    const students = await User.find(filter).select('name email studentId department year');
+    const count = students.length;
+
+    res.status(200).json({
+      success: true,
+      count,
+      data: students,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 };

@@ -19,7 +19,7 @@ const Sidebar = () => {
   const adminLinks = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/admin/students', label: 'Manage Students', icon: '👥' },
-    { path: '/admin/subjects', label: 'Manage Subjects', icon: '📚' },
+     { path: '/admin/subjects', label: 'Manage Subjects', icon: '📚' },
     { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
   ];
 

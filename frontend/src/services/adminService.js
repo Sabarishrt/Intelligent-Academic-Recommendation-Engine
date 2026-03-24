@@ -52,4 +52,8 @@ export const adminService = {
     const response = await axios.get(`${API_URL}/api/admin/analytics`, getAuthHeaders());
     return response.data;
   },
+  getStudentsByYearAndDepartment: async (year, department) => {
+  const response = await axios.get(`${API_URL}/api/admin/students-filter?year=${year || ''}&department=${department || ''}`, getAuthHeaders());
+  return response.data;
+},
 };
