@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const AUTH_URL = process.env.REACT_APP_AUTH_URL || 'http://localhost:5000/api/auth';
+const API_URL = process.env.REACT_APP_API_URL || 'https://intelligent-academic-recommendation.onrender.com/api';
+const AUTH_URL = process.env.REACT_APP_AUTH_URL || 'https://intelligent-academic-recommendation.onrender.com/api/auth';
 
 const AuthContext = createContext();
 
