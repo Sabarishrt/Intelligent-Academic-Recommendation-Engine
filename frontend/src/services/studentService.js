@@ -28,22 +28,22 @@ export const studentService = {
   },
 
   addMarks: async (data) => {
-    const response = await axios.post(`${API_URL}/api/students/marks`, data, getAuthHeaders());
+    const response = await axios.post(`${API_URL}/students/marks`, data, getAuthHeaders());
     return response.data;
   },
 
   getPerformance: async () => {
-    const response = await axios.get(`${API_URL}/api/students/performance`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/students/performance`, getAuthHeaders());
     return response.data;
   },
 
   getSkills: async () => {
-    const response = await axios.get(`${API_URL}/api/students/skills`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/students/skills`, getAuthHeaders());
     return response.data;
   },
 
   updateSkills: async (data) => {
-    const response = await axios.put(`${API_URL}/api/students/skills`, data, getAuthHeaders());
+    const response = await axios.put(`${API_URL}/students/skills`, data, getAuthHeaders());
     return response.data;
   },
 };

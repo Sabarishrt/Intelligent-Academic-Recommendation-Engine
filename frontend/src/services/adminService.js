@@ -29,22 +29,22 @@ export const adminService = {
   },
 
   createSubject: async (data) => {
-    const response = await axios.post(`${API_URL}/api/admin/subjects`, data, getAuthHeaders());
+    const response = await axios.post(`${API_URL}/admin/subjects`, data, getAuthHeaders());
     return response.data;
   },
 
   getAllSubjects: async () => {
-    const response = await axios.get(`${API_URL}/api/admin/subjects`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/admin/subjects`, getAuthHeaders());
     return response.data;
   },
 
   updateSubject: async (id, data) => {
-    const response = await axios.put(`${API_URL}/api/admin/subjects/${id}`, data, getAuthHeaders());
+    const response = await axios.put(`${API_URL}/admin/subjects/${id}`, data, getAuthHeaders());
     return response.data;
   },
 
   deleteSubject: async (id) => {
-    const response = await axios.delete(`${API_URL}/api/admin/subjects/${id}`, getAuthHeaders());
+    const response = await axios.delete(`${API_URL}/admin/subjects/${id}`, getAuthHeaders());
     return response.data;
   },
 

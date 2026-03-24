@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://intelligent-academic-recommendation.onrender.com/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const AuthContext = createContext();
 
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      axios.get(`${API_URL}/auth/me`)
+      const res = await axios.get(`${API_URL}/auth/me`);
       setUser(res.data.user);
     } catch (error) {
       localStorage.removeItem('token');
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-axios.post(`${API_URL}/auth/login`, { email, password })
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
       const { token: newToken, user: userData } = res.data;
       localStorage.setItem('token', newToken);
       setToken(newToken);
@@ -51,7 +51,7 @@ axios.post(`${API_URL}/auth/login`, { email, password })
 
   const register = async (userData) => {
     try {
-axios.post(`${API_URL}/auth/register`, userData)
+      const res = await axios.post(`${API_URL}/auth/register`, userData);
       const { token: newToken, user: userInfo } = res.data;
       localStorage.setItem('token', newToken);
       setToken(newToken);
