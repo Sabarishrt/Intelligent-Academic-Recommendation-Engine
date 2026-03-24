@@ -3,6 +3,12 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
+const cors = require("cors");
+
+app.use(cors({
+  origin: "https://your-project-name.vercel.app",
+  credentials: true
+}));
 
 // Load env vars
 dotenv.config();
