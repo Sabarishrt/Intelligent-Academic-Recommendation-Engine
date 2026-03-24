@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -14,17 +14,17 @@ const getAuthHeaders = () => {
 export const adminService = {
   getDashboard: async () => {
     // add timestamp to bust caches
-    const response = await axios.get(`${API_URL}/api/admin/dashboard?ts=${Date.now()}`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/admin/dashboard?ts=${Date.now()}`, getAuthHeaders());
     return response.data;
   },
 
   getAllStudents: async () => {
-    const response = await axios.get(`${API_URL}/api/admin/students`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/admin/students`, getAuthHeaders());
     return response.data;
   },
 
   getStudent: async (id) => {
-    const response = await axios.get(`${API_URL}/api/admin/students/${id}`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/admin/students/${id}`, getAuthHeaders());
     return response.data;
   },
 

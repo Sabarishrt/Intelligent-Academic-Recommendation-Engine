@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -13,17 +13,17 @@ const getAuthHeaders = () => {
 
 export const studentService = {
   getProfile: async () => {
-    const response = await axios.get(`${API_URL}/api/students/profile`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/students/profile`, getAuthHeaders());
     return response.data;
   },
 
   updateProfile: async (data) => {
-    const response = await axios.put(`${API_URL}/api/students/profile`, data, getAuthHeaders());
+    const response = await axios.put(`${API_URL}/students/profile`, data, getAuthHeaders());
     return response.data;
   },
 
   getMarks: async () => {
-    const response = await axios.get(`${API_URL}/api/students/marks`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/students/marks`, getAuthHeaders());
     return response.data;
   },
 
