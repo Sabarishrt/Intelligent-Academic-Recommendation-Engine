@@ -43,7 +43,7 @@ const Recommendations = () => {
     setMessage('');
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/api/recommendations/generate`,
         {},
         {
@@ -52,10 +52,15 @@ const Recommendations = () => {
           },
         }
       );
-      setMessage('Recommendations generated successfully!');
-      fetchRecommendations();
+      if (response?.data?.success) {
+        setMessage('Recommendations generated successfully!');
+        await fetchRecommendations();
+      } else {
+        setMessage(`Error generating recommendations: ${response?.data?.message || 'Unknown error'}`);
+      }
     } catch (error) {
-      setMessage('Error generating recommendations');
+      console.error('Generate recommendations error:', error);
+      setMessage(`Error generating recommendations: ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
     }

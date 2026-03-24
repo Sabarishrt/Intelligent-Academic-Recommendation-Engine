@@ -210,6 +210,18 @@ exports.generateRecommendations = async (req, res, next) => {
       });
     }
 
+    // If no recommendations were generated at all, provide a fallback instruction
+    if (recommendations.length === 0) {
+      recommendations.push({
+        student: req.user.id,
+        type: 'general',
+        title: 'Add academic data to get recommendations',
+        description: 'No strong signals were found in your marks/skills/interests. Add marks and skills data then try again to generate personalized recommendations.',
+        priority: 'low',
+        reasoning: 'Fallback recommendation because no rule matched and Python service did not provide output.',
+      });
+    }
+
     // Save recommendations to database
     const savedRecommendations = await Recommendation.insertMany(recommendations);
 
