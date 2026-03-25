@@ -167,9 +167,10 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
-  padding: 2rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   border: 1px solid #e9ecef;
+  flex: 1;
 }
 
 .section-header {
@@ -269,8 +270,13 @@
 .courses-grid,
 .careers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.recommendations-layout.side-by-side .courses-grid,
+.recommendations-layout.side-by-side .careers-grid {
+  grid-template-columns: 1fr;
 }
 
 .course-card,
@@ -481,11 +487,19 @@
   border-left-color: #10b981;
 }
 
+.recommendation-list {
+  flex: 1;
+}
+
 /* Cards grid */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+.recommendations-layout.side-by-side .cards-grid {
+  grid-template-columns: 1fr;
 }
 
 .card-top {
@@ -539,5 +553,31 @@
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Side-by-Side Layout */
+.recommendations-layout.side-by-side {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.recommendations-layout.full-width {
+  display: block;
+}
+
+@media (max-width: 1200px) {
+  .recommendations-layout.side-by-side {
+    flex-direction: column;
+  }
+  
+  .side-by-side .course-recommendations-section,
+  .side-by-side .recommendation-list {
+    width: 100%;
+  }
+
+  .side-by-side .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
