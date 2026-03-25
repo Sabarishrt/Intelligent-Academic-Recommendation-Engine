@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { studentService } from '../../services/studentService';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const Marks = () => {
   const [marks, setMarks] = useState([]);
@@ -35,7 +35,7 @@ const Marks = () => {
 
   const fetchSubjects = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/students/subjects`);
+      const res = await axios.get(`${API_URL}/students/subjects`);
       setSubjects(res.data.data || []);
     } catch (error) {
       console.error('Error fetching subjects:', error);

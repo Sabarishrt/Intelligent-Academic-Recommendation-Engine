@@ -24,7 +24,9 @@ const APIFeatures = require('../utils/apiFeatures');
 // @access  Private (Student)
 exports.getProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id)
+      .select('name email department year interests')
+      .lean();
     res.status(200).json({
       success: true,
       data: user,
@@ -66,8 +68,11 @@ exports.updateProfile = async (req, res, next) => {
 exports.getMarks = async (req, res, next) => {
   try {
     const marks = await Marks.find({ student: req.user.id })
+      .select('subject marks maxMarks semester year examType')
       .populate('subject', 'name code credits')
-      .sort('-semester -year');
+      .sort('-semester -year')
+      .limit(100)
+      .lean();
 
     res.status(200).json({
       success: true,
@@ -205,10 +210,12 @@ exports.getPerformance = async (req, res, next) => {
 // @access  Private (Student)
 exports.getSkills = async (req, res, next) => {
   try {
-    let skills = await Skills.findOne({ student: req.user.id });
+    let skills = await Skills.findOne({ student: req.user.id })
+      .select('technical soft')
+      .lean();
 
     if (!skills) {
-      skills = await Skills.create({ student: req.user.id });
+      skills = { technical: [], soft: [] };
     }
 
     res.status(200).json({

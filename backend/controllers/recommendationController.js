@@ -4,17 +4,65 @@ const Skills = require('../models/Skills');
 const User = require('../models/User');
 const CareerPath = require('../models/CareerPath');
 const Subject = require('../models/Subject');
-const axios = require('axios');
+const recommendationService = require('../services/recommendationService');
+
+// @desc    Get course recommendations based on student performance
+// @route   POST /api/recommendations/courses
+// @access  Private (Student)
+exports.getCourseRecommendations = async (req, res, next) => {
+  try {
+    const { marks, skills, interests } = req.body;
+
+    // Validate input
+    if (!marks || typeof marks !== 'object' || Object.keys(marks).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Marks object is required and cannot be empty'
+      });
+    }
+
+    // Ensure skills is an array, filter out empty values
+    const skillsArray = Array.isArray(skills) 
+      ? skills.filter(s => s && typeof s === 'string').map(s => s.trim()).filter(Boolean)
+      : [];
+
+    // Ensure interests is an array, filter out empty values
+    const interestsArray = Array.isArray(interests)
+      ? interests.filter(i => i && typeof i === 'string').map(i => i.trim()).filter(Boolean)
+      : [];
+
+    console.log('Course recommendation request:', { marksKeys: Object.keys(marks), skillsCount: skillsArray.length, interestsCount: interestsArray.length });
+
+    // Generate course recommendations
+    const recommendations = await recommendationService.generateCourseRecommendations(
+      marks,
+      skillsArray,
+      interestsArray
+    );
+
+    res.status(200).json({
+      success: true,
+      data: recommendations
+    });
+  } catch (error) {
+    console.error('Error in getCourseRecommendations:', error);
+    next(error);
+  }
+};
 
 // @desc    Get recommendations for student
 // @route   GET /api/recommendations
 // @access  Private (Student)
 exports.getRecommendations = async (req, res, next) => {
   try {
+    // Use lean() for read-only data and limit fields for better performance
     const recommendations = await Recommendation.find({ student: req.user.id })
+      .select('title description priority type subjects careerPath reasoning generatedAt isViewed')
       .populate('subjects', 'name code')
       .populate('careerPath', 'name description')
-      .sort('-generatedAt');
+      .sort('-generatedAt')
+      .limit(50)  // Limit to prevent loading too much data
+      .lean();    // Return plain JavaScript objects for better performance
 
     res.status(200).json({
       success: true,
@@ -22,6 +70,7 @@ exports.getRecommendations = async (req, res, next) => {
       data: recommendations,
     });
   } catch (error) {
+    console.error('Error in getRecommendations:', error);
     next(error);
   }
 };
@@ -37,7 +86,14 @@ exports.generateRecommendations = async (req, res, next) => {
     const skills = await Skills.findOne({ student: req.user.id });
     const careerPaths = await CareerPath.find();
 
-    // Prepare data for Python service
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: 'Student not found'
+      });
+    }
+
+    // Prepare data for recommendation service
     const studentData = {
       studentId: student._id.toString(),
       marks: marks.map(m => ({
@@ -59,178 +115,33 @@ exports.generateRecommendations = async (req, res, next) => {
     // Delete previous recommendations for this student
     await Recommendation.deleteMany({ student: req.user.id });
 
-    // Call Python recommendation service
-    let pythonRecommendations = [];
-    try {
-      const pythonResponse = await axios.post(
-        process.env.PYTHON_SERVICE_URL || 'http://localhost:5000/recommend',
-        studentData,
-        { timeout: 10000 }
-      );
-      pythonRecommendations = pythonResponse.data.recommendations || [];
-    } catch (error) {
-      console.error('Python service error:', error.message);
-      // Continue with rule-based recommendations if Python service fails
-    }
+    // Call Node.js service
+    const result = await recommendationService.generate(student, marks, skills, careerPaths);
 
-    // Generate rule-based recommendations (fallback or additional)
-    const recommendations = [];
-
-    // 1. Subject improvement recommendations
-    marks.forEach(mark => {
-      const percentage = (mark.marks / mark.maxMarks) * 100;
-      if (percentage < 50) {
-        recommendations.push({
-          student: req.user.id,
-          type: 'subject-improvement',
-          title: `Improve Performance in ${mark.subject.name}`,
-          description: `Your current score is ${mark.marks}/${mark.maxMarks} (${percentage.toFixed(1)}%). Focus on improving this subject through regular practice and seeking help from instructors.`,
-          priority: 'high',
-          subjects: [mark.subject._id],
-          reasoning: `Marks below 50% indicate weak performance in this subject.`,
-        });
-      }
-    });
-
-    // 2. Career path recommendations based on strong subjects
-    const subjectAverages = {};
-    marks.forEach(mark => {
-      const subjectName = mark.subject.name;
-      const percentage = (mark.marks / mark.maxMarks) * 100;
-      if (!subjectAverages[subjectName]) {
-        subjectAverages[subjectName] = [];
-      }
-      subjectAverages[subjectName].push(percentage);
-    });
-
-    Object.keys(subjectAverages).forEach(subject => {
-      const avg = subjectAverages[subject].reduce((a, b) => a + b, 0) / subjectAverages[subject].length;
-      subjectAverages[subject] = avg;
-    });
-
-    // Check for career paths (marks, skills, interests)
-    for (const path of careerPaths) {
-      const matchingSubjects = path.requiredSubjects.filter(subject =>
-        Object.keys(subjectAverages).some(s => s.toLowerCase().includes(subject.toLowerCase()))
-      );
-
-      // Get missing required subjects that student doesn't have marks in
-      const missingSubjects = path.requiredSubjects.filter(subject =>
-        !Object.keys(subjectAverages).some(s => s.toLowerCase().includes(subject.toLowerCase()))
-      );
-
-      // Skill match: at least one required skill in student's technical or soft skills
-      const studentSkills = [
-        ...(skills?.technical?.map(s => s.skill.toLowerCase()) || []),
-        ...(skills?.soft?.map(s => s.skill.toLowerCase()) || [])
-      ];
-      const matchingSkills = path.requiredSkills.filter(skill =>
-        studentSkills.includes(skill.toLowerCase())
-      );
-
-      // Interest match: at least one interest matches career path name, category, or required skill
-      const studentInterests = (student.interests || []).map(i => i.toLowerCase());
-      const interestMatch =
-        studentInterests.some(interest =>
-          path.name.toLowerCase().includes(interest) ||
-          (path.category && path.category.toLowerCase().includes(interest)) ||
-          path.requiredSkills.some(skill => skill.toLowerCase().includes(interest))
-        );
-
-      // Marks-based recommendation (original logic)
-      let avgMarks = 0;
-      if (matchingSubjects.length > 0) {
-        const relevantMarks = marks.filter(m =>
-          matchingSubjects.some(subject => m.subject.name.toLowerCase().includes(subject.toLowerCase()))
-        );
-        avgMarks = relevantMarks.length > 0
-          ? relevantMarks.reduce((sum, m) => sum + (m.marks / m.maxMarks) * 100, 0) / relevantMarks.length
-          : 0;
-      }
-
-      // UPDATED LOGIC: Recommend career path only if:
-      // 1. Strong marks in required subjects AND matched subjects exist, OR
-      // 2. Matching skills (skills can compensate for subject marks), OR
-      // 3. Interest match with matched subjects (must have at least some relevant subject marks)
-      
-      const hasStrongMarksInRelevantSubjects = matchingSubjects.length > 0 && avgMarks >= path.minMarks;
-      const hasMatchingSkills = matchingSkills.length > 0;
-      const hasInterestMatchWithSubjectMarks = interestMatch && matchingSubjects.length > 0;
-
-      if (hasStrongMarksInRelevantSubjects || hasMatchingSkills || hasInterestMatchWithSubjectMarks) {
-        let reasoning = [];
-        if (matchingSubjects.length > 0 && avgMarks >= path.minMarks) {
-          reasoning.push(`Strong performance in relevant subjects (${matchingSubjects.join(', ')}) with average of ${avgMarks.toFixed(1)}%.`);
-        }
-        if (matchingSkills.length > 0) {
-          reasoning.push(`You have relevant skills: ${matchingSkills.join(', ')}.`);
-        }
-        if (interestMatch && matchingSubjects.length > 0) {
-          reasoning.push(`Your interests align with this career path and you have subject knowledge.`);
-        }
-        recommendations.push({
-          student: req.user.id,
-          type: 'career-path',
-          title: `Consider ${path.name} Career Path`,
-          description: path.description,
-          priority: 'medium',
-          careerPath: path._id,
-          reasoning: reasoning.join(' '),
-        });
-      }
-      // If there's an interest match but NO relevant subject marks, recommend those subjects
-      else if (interestMatch && missingSubjects.length > 0) {
-        // Try to find Subject documents for the missing subject names
-        const subjectDocs = await Subject.find({ name: { $in: missingSubjects } });
-        const subjectIds = subjectDocs.map(s => s._id);
-
-        recommendations.push({
-          student: req.user.id,
-          type: 'subject-improvement',
-          title: `${path.name} Path - Study Required Subjects`,
-          description: `You're interested in ${path.name}, but you haven't taken marks in the required subjects yet. Start with: ${missingSubjects.join(', ')}. Once you build a strong foundation in these subjects, you'll be well-prepared for this career path.`,
-          priority: 'high',
-          subjects: subjectIds,
-          reasoning: `Interest in ${path.name} detected, but required subject knowledge is missing. Recommendation: study ${missingSubjects.join(', ')}.`,
-        });
-      }
-    }
-
-    // Merge Python recommendations if available
-    if (pythonRecommendations.length > 0) {
-      pythonRecommendations.forEach(rec => {
-        recommendations.push({
-          student: req.user.id,
-          type: rec.type || 'academic-plan',
-          title: rec.title,
-          description: rec.description,
-          priority: rec.priority || 'medium',
-          reasoning: rec.reasoning,
-        });
-      });
-    }
-
-    // If no recommendations were generated at all, provide a fallback instruction
-    if (recommendations.length === 0) {
-      recommendations.push({
-        student: req.user.id,
-        type: 'general',
-        title: 'Add academic data to get recommendations',
-        description: 'No strong signals were found in your marks/skills/interests. Add marks and skills data then try again to generate personalized recommendations.',
-        priority: 'low',
-        reasoning: 'Fallback recommendation because no rule matched and Python service did not provide output.',
+    // Validate recommendations before saving
+    if (result.recommendations && Array.isArray(result.recommendations)) {
+      // Ensure all recommendations have valid types
+      result.recommendations.forEach(rec => {
+        if (!rec.type) rec.type = 'academic-plan';
+        rec.type = rec.type.toLowerCase().trim();
       });
     }
 
     // Save recommendations to database
-    const savedRecommendations = await Recommendation.insertMany(recommendations);
+    const savedRecommendations = await Recommendation.insertMany(result.recommendations).catch(err => {
+      console.error('Error saving recommendations:', err);
+      throw new Error(`Failed to save recommendations: ${err.message}`);
+    });
 
     res.status(201).json({
       success: true,
-      count: savedRecommendations.length,
-      data: savedRecommendations,
+      weakSubjects: result.weakSubjects,
+      strongSubjects: result.strongSubjects,
+      recommendedSubjects: savedRecommendations,
+      message: result.message
     });
   } catch (error) {
+    console.error('Error in generateRecommendations:', error);
     next(error);
   }
 };

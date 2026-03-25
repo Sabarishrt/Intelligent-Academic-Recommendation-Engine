@@ -46,4 +46,10 @@ export const studentService = {
     const response = await axios.put(`${API_URL}/students/skills`, data, getAuthHeaders());
     return response.data;
   },
+
+  // New course recommendation method
+  getCourseRecommendations: async (recommendationData) => {
+    const response = await axios.post(`${API_URL}/recommendations/courses`, recommendationData, getAuthHeaders());
+    return response.data;
+  },
 };

@@ -148,6 +148,280 @@
   margin-bottom: 1.5rem;
 }
 
+/* Course Recommendations Styles */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.recommendations-btn.secondary {
+  background: #6c757d;
+}
+
+.recommendations-btn.secondary:hover {
+  background: #5a6268;
+}
+
+.course-recommendations-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.summary-card.weak {
+  border-left: 4px solid #dc3545;
+}
+
+.summary-card.strong {
+  border-left: 4px solid #28a745;
+}
+
+.summary-card.courses {
+  border-left: 4px solid #007bff;
+}
+
+.summary-card.careers {
+  border-left: 4px solid #ffc107;
+}
+
+.summary-icon {
+  font-size: 2rem;
+}
+
+.summary-content {
+  flex: 1;
+}
+
+.summary-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.summary-list {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.courses-section,
+.careers-section {
+  margin-bottom: 2rem;
+}
+
+.courses-section h3,
+.careers-section h3 {
+  color: #222;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.courses-grid,
+.careers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.course-card,
+.career-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.2s;
+}
+
+.course-card:hover,
+.career-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.course-card.beginner {
+  border-left: 4px solid #28a745;
+}
+
+.course-card.advanced {
+  border-left: 4px solid #007bff;
+}
+
+.course-card.intermediate {
+  border-left: 4px solid #ffc107;
+}
+
+.course-header,
+.career-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.course-subject,
+.career-subject {
+  font-weight: 600;
+  color: #222;
+  font-size: 1.1rem;
+}
+
+.course-level,
+.career-score {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.course-level.beginner {
+  background: #d4edda;
+  color: #155724;
+}
+
+.course-level.advanced {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.course-level.intermediate {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.career-score {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.course-courses,
+.career-suggestions {
+  margin-bottom: 1rem;
+}
+
+.course-courses strong,
+.career-suggestions strong {
+  color: #222;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.course-courses ul,
+.career-suggestions ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.course-courses li,
+.career-suggestions li {
+  color: #666;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.course-reason,
+.career-reason {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid var(--primary);
+}
+
+.course-reason strong,
+.career-reason strong {
+  color: var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .recommendations-main {
+    padding: 1.5rem 1rem;
+  }
+
+  .recommendations-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .recommendations-btn {
+    width: 100%;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-grid,
+  .careers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
 /* Stat cards */
 .stats-grid {
   display: grid;
