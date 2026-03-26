@@ -49,11 +49,11 @@ export const adminService = {
   },
 
   getAnalytics: async () => {
-    const response = await axios.get(`${API_URL}/api/admin/analytics`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/admin/analytics`, getAuthHeaders());
     return response.data;
   },
   getStudentsByYearAndDepartment: async (year, department) => {
-  const response = await axios.get(`${API_URL}/api/admin/students-filter?year=${year || ''}&department=${department || ''}`, getAuthHeaders());
+  const response = await axios.get(`${API_URL}/admin/students-filter?year=${year || ''}&department=${department || ''}`, getAuthHeaders());
   return response.data;
 },
 };

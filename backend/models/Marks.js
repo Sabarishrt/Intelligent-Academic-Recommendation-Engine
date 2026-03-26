@@ -60,5 +60,6 @@ marksSchema.pre('save', function (next) {
 
 // Index for efficient queries
 marksSchema.index({ student: 1, subject: 1, semester: 1 });
+marksSchema.index({ subject: 1 });
 
 module.exports = mongoose.model('Marks', marksSchema);
